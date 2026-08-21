@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NativeCppApp</string>
+    <string name="welcome_message">Welcome to NativeCppApp!</string>
+    <string name="btn_action">Execute Action</string>
+</resources>
