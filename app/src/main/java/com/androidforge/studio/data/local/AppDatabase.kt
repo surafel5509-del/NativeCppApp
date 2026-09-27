@@ -24,8 +24,8 @@ import com.androidforge.studio.data.local.entity.ProjectEntity
         PluginEntity::class,
         BreakpointEntity::class,
     ],
-    version = 1,
-    exportSchema = true,
+    version = 2,
+    exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun projectDao(): ProjectDao

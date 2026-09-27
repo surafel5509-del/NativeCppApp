@@ -82,8 +82,8 @@ kotlin {
 }
 
 ksp {
+    arg("room.incremental", "false")
     arg("room.schemaLocation", "$projectDir/schemas")
-    arg("room.incremental", "true")
 }
 
 dependencies {
