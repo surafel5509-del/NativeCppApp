@@ -1,0 +1,9 @@
+{
+  "id": "forge.theme.neon",
+  "name": "Neon Forge Theme",
+  "version": "1.0.0",
+  "description": "High-contrast neon color overrides for the studio editor.",
+  "author": "AndroidForge",
+  "type": "THEME",
+  "entry": "theme-neon.json"
+}

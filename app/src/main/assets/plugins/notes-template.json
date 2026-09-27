@@ -1,0 +1,9 @@
+{
+  "id": "forge.template.notes",
+  "name": "Notes App Template",
+  "version": "0.9.0",
+  "description": "Community template: offline notes app with Room + Compose list/detail.",
+  "author": "Community",
+  "type": "TEMPLATE",
+  "entry": ""
+}

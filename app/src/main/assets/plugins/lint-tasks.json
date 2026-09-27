@@ -1,0 +1,9 @@
+{
+  "id": "forge.tasks.lint",
+  "name": "Lint & Format Tasks",
+  "version": "1.1.0",
+  "description": "Adds ktlint-style check and format commands to the build task list.",
+  "author": "AndroidForge",
+  "type": "BUILD_TASK",
+  "entry": "tasks.properties"
+}
