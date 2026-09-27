@@ -10,6 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
       - name: Checkout
@@ -44,6 +47,8 @@ jobs:
           exit $status
 
       - name: Unit tests
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set +e
           set -o pipefail
@@ -59,6 +64,22 @@ jobs:
             while IFS= read -r line; do
               echo "::error::[test] $line"
             done < "$RUNNER_TEMP/digest.txt"
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+              {
+                echo "### CI failure log (test step), run ${GITHUB_RUN_ID}"
+                echo
+                echo "First 80 lines:"
+                echo '```'
+                head -80 "$RUNNER_TEMP/gradle-test.log" | cut -c1-300
+                echo '```'
+                echo
+                echo "Error region (stack frames stripped):"
+                echo '```'
+                grep -v -E "^[[:space:]]+(at |\.\.\.)" "$RUNNER_TEMP/gradle-test.log" | cut -c1-300 | head -400
+                echo '```'
+              } > "$RUNNER_TEMP/ci-comment.md"
+              gh pr comment "${{ github.event.number }}" --body-file "$RUNNER_TEMP/ci-comment.md"                 || echo "::warning::could not post PR comment"
+            fi
           fi
           exit $status
 
