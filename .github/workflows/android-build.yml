@@ -27,11 +27,35 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      # On failure, mirror compiler/test errors into step annotations so they
+      # are readable through the Checks API even when raw logs are unavailable.
       - name: Unit tests
-        run: ./gradlew test --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew test --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-test.log"
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            echo "::group::Failure digest"
+            grep -E "(^e: file://|^w: file://|error: |What went wrong|> Task .*FAILED|FAILURE:|FAILED$|tests? completed|expected:|actual:)" "$RUNNER_TEMP/gradle-test.log" \
+              | head -60 | cut -c1-400 | while IFS= read -r line; do
+                  echo "::error::$line"
+                done
+            echo "::endgroup::"
+          fi
+          exit $status
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew assembleDebug --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-assemble.log"
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            grep -E "(^e: file://|error: |What went wrong|> Task .*FAILED|FAILURE:)" "$RUNNER_TEMP/gradle-assemble.log" \
+              | head -60 | cut -c1-400 | while IFS= read -r line; do
+                  echo "::error::$line"
+                done
+          fi
+          exit $status
 
       - name: Upload test reports
         if: always()
@@ -40,6 +64,7 @@ jobs:
           name: test-reports
           path: app/build/reports/tests/
           retention-days: 7
+          if-no-files-found: ignore
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
