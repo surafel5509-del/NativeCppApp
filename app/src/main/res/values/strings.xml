@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NativeCppApp</string>
-    <string name="welcome_message">Welcome to NativeCppApp!</string>
-    <string name="btn_action">Execute Action</string>
+    <string name="app_name">AndroidForge Studio</string>
+    <string name="notification_channel_builds">Builds</string>
+    <string name="notification_channel_builds_desc">Background APK/AAB build progress and results</string>
 </resources>

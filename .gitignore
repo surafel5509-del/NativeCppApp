@@ -13,3 +13,18 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Gradle / Android build outputs (root-anchored ONLY: never use a bare
+# 'build/' pattern here — it would swallow source packages like
+# app/src/main/java/.../data/build/ and .../ui/build/).
+/build/
+/app/build/
+*.apk
+*.aab
+*.ap_
+
+# IDE
+.idea/
+*.hprof
+
+# Room exported schemas are committed on purpose (app/schemas/) — do not ignore.

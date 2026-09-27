@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "NativeCppApp"
+rootProject.name = "AndroidForgeStudio"
 
 include(":app")
