@@ -177,7 +177,7 @@ Pinned (keep in sync across `build.gradle.kts` / `settings.gradle.kts` / workflo
 
 ```
 Gradle 8.11.1 · AGP 8.7.3 · Kotlin 2.1.0 (compose compiler 2.1.0)
-KSP 2.1.0-1.0.29 · Hilt 2.51.1 · Room 2.7.1 · Compose BOM 2024.12.01
+KSP 2.1.0-1.0.29 · Hilt 2.54 · Room 2.7.1 · Compose BOM 2024.12.01
 compileSdk 35 · minSdk 26 · targetSdk 35 · JVM target 17 · JDK 17
 ```
 
