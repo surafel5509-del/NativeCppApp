@@ -77,32 +77,32 @@ object ComposeCodeGenerator {
         val pad = "    ".repeat(indent)
         when (c.type) {
             ComponentType.COLUMN -> {
-                appendLine("$padColumn(modifier = ${modifierString(c)}) {")
+                appendLine("${pad}Column(modifier = ${modifierString(c)}) {")
                 emitChildren(c, indent + 1)
                 appendLine("$pad}")
             }
             ComponentType.ROW -> {
-                appendLine("$padRow(modifier = ${modifierString(c)}) {")
+                appendLine("${pad}Row(modifier = ${modifierString(c)}) {")
                 emitChildren(c, indent + 1)
                 appendLine("$pad}")
             }
             ComponentType.BOX -> {
-                appendLine("$padBox(modifier = ${modifierString(c)}) {")
+                appendLine("${pad}Box(modifier = ${modifierString(c)}) {")
                 emitChildren(c, indent + 1)
                 appendLine("$pad}")
             }
             ComponentType.TEXT -> {
                 val size = c.props["size"] ?: "16"
-                appendLine("$padText(text = \"${c.text}\", fontSize = ${size}.sp)")
+                appendLine("${pad}Text(text = \"${c.text}\", fontSize = ${size}.sp)")
             }
             ComponentType.BUTTON -> {
-                appendLine("$padButton(onClick = { /* TODO */ }) {")
+                appendLine("${pad}Button(onClick = { /* TODO */ }) {")
                 appendLine("${pad}    Text(\"${c.text.ifBlank { "Button" }}\")")
                 appendLine("$pad}")
                 emitChildren(c, indent + 1)
             }
             ComponentType.TEXTFIELD -> {
-                appendLine("$padOutlinedTextField(")
+                appendLine("${pad}OutlinedTextField(")
                 appendLine("${pad}    value = \"\",")
                 appendLine("${pad}    onValueChange = { },")
                 appendLine("${pad}    placeholder = { Text(\"${c.props["hint"] ?: ""}\") },")
@@ -110,24 +110,24 @@ object ComposeCodeGenerator {
                 appendLine("$pad)")
             }
             ComponentType.CARD -> {
-                appendLine("$padCard(modifier = ${modifierString(c)}) {")
+                appendLine("${pad}Card(modifier = ${modifierString(c)}) {")
                 emitChildren(c, indent + 1)
                 appendLine("$pad}")
             }
             ComponentType.SPACER -> {
-                appendLine("$padSpacer(Modifier.height(${c.props["height"] ?: "16"}.dp))")
+                appendLine("${pad}Spacer(Modifier.height(${c.props["height"] ?: "16"}.dp))")
             }
             ComponentType.DIVIDER -> {
-                appendLine("$padHorizontalDivider()")
+                appendLine("${pad}HorizontalDivider()")
             }
             ComponentType.ICON -> {
-                appendLine("$padText(\"${c.props["icon"] ?: "•"}\", fontSize = 24.sp)")
+                appendLine("${pad}Text(\"${c.props["icon"] ?: "•"}\", fontSize = 24.sp)")
             }
             ComponentType.IMAGE -> {
-                appendLine("$padText(\"[Image: ${c.props["contentDescription"] ?: "image"}]\") // replace with AsyncImage")
+                appendLine("${pad}Text(\"[Image: ${c.props["contentDescription"] ?: "image"}]\") // replace with AsyncImage")
             }
             ComponentType.LIST -> {
-                appendLine("$padLazyColumn {")
+                appendLine("${pad}LazyColumn {")
                 emitChildren(c, indent + 1)
                 appendLine("$pad}")
             }

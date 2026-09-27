@@ -213,7 +213,7 @@ class AiRepositoryImpl @Inject constructor(
         http.newCall(req).execute().use { resp ->
             if (!resp.isSuccessful) throw IllegalStateException("Gemini HTTP ${resp.code}")
             val json = gson.fromJson(resp.body?.string(), JsonObject::class.java)
-            return json.getAsJsonObject("candidates")[0].asJsonObject
+            return json.getAsJsonArray("candidates")[0].asJsonObject
                 .getAsJsonObject("content").getAsJsonArray("parts")[0].asJsonObject
                 .get("text").asString
         }

@@ -1,5 +1,6 @@
 package com.androidforge.studio.data.build
 
+import com.androidforge.studio.domain.model.BuildDiagnostic
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader

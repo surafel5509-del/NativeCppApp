@@ -25,31 +25,31 @@ class SettingsRepositoryImpl @Inject constructor(
 ) : SettingsRepository {
 
     override fun themeMode(): Flow<String> = store.themeMode
-    override suspend fun setThemeMode(mode: String) = store.setThemeMode(mode)
+    override suspend fun setThemeMode(mode: String) { store.setThemeMode(mode) }
 
     override fun oneHandMode(): Flow<Boolean> = store.oneHandMode
-    override suspend fun setOneHandMode(enabled: Boolean) = store.setOneHandMode(enabled)
+    override suspend fun setOneHandMode(enabled: Boolean) { store.setOneHandMode(enabled) }
 
     override fun editorFontSize(): Flow<Int> = store.editorFontSize
-    override suspend fun setEditorFontSize(sp: Int) = store.setEditorFontSize(sp)
+    override suspend fun setEditorFontSize(sp: Int) { store.setEditorFontSize(sp) }
 
     override fun aiProvider(): Flow<AiProvider> = store.aiProvider.map {
         runCatching { AiProvider.valueOf(it) }.getOrDefault(AiProvider.LOCAL)
     }
 
-    override suspend fun setAiProvider(provider: AiProvider) = store.setAiProvider(provider.name)
+    override suspend fun setAiProvider(provider: AiProvider) { store.setAiProvider(provider.name) }
 
     override fun openAiApiKey(): Flow<String> = store.openAiKeyEnc.map { vault.unseal(it) }
-    override suspend fun setOpenAiApiKey(key: String) = store.setOpenAiKeyEnc(vault.seal(key))
+    override suspend fun setOpenAiApiKey(key: String) { store.setOpenAiKeyEnc(vault.seal(key)) }
 
     override fun geminiApiKey(): Flow<String> = store.geminiKeyEnc.map { vault.unseal(it) }
-    override suspend fun setGeminiApiKey(key: String) = store.setGeminiKeyEnc(vault.seal(key))
+    override suspend fun setGeminiApiKey(key: String) { store.setGeminiKeyEnc(vault.seal(key)) }
 
     override fun cloudToken(): Flow<String> = store.cloudTokenEnc.map { vault.unseal(it) }
-    override suspend fun setCloudToken(token: String) = store.setCloudTokenEnc(vault.seal(token))
+    override suspend fun setCloudToken(token: String) { store.setCloudTokenEnc(vault.seal(token)) }
 
     override fun sandboxScopes(): Flow<Boolean> = store.sandboxScopes
-    override suspend fun setSandboxScopes(enabled: Boolean) = store.setSandboxScopes(enabled)
+    override suspend fun setSandboxScopes(enabled: Boolean) { store.setSandboxScopes(enabled) }
 
     override fun observeBreakpoints(projectId: Long): Flow<List<Breakpoint>> =
         breakpointDao.observeForProject(projectId).map { list ->

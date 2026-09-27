@@ -1,7 +1,7 @@
 package com.androidforge.studio.ui.nav
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Code
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
@@ -34,7 +34,7 @@ data class BottomDestination(
  */
 val bottomDestinations = listOf(
     BottomDestination(Routes.HOME, "Projects", Icons.Filled.Home),
-    BottomDestination(Routes.EDITOR, "Editor", Icons.AutoMirrored.Filled.Code),
+    BottomDestination(Routes.EDITOR, "Editor", Icons.Filled.Code),
     BottomDestination(Routes.BUILD, "Build", Icons.Filled.Build),
     BottomDestination(Routes.AI, "AI", Icons.Filled.SmartToy),
     BottomDestination(Routes.TOOLS, "Tools", Icons.Filled.Terminal),
