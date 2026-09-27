@@ -22,8 +22,8 @@ import javax.inject.Singleton
  * Plugin registry.
  *
  * Sources, merged on [refresh]:
- *  1. bundled manifests in assets/plugins/*.json
- *  2. user-installed manifests in filesDir/plugins/*.json
+ *  1. bundled manifests in assets/plugins (JSON files)
+ *  2. user-installed manifests in filesDir/plugins (JSON files)
  *  3. plugin zips installed through [installFromBytes]
  *
  * Manifest schema (plugin.json):
