@@ -16,13 +16,13 @@ import javax.inject.Singleton
  * into the app sandbox:
  *
  * ```
- * filesDir/toolchain/bin/<tools…>     executables (chmod applied on resolve)
+ * filesDir/toolchain/bin/<tools>     executables (chmod applied on resolve)
  * filesDir/sdk/platforms/android-35/android.jar
  * filesDir/ndk/<version>/...
- * filesDir/toolchain/libs/*.jar
+ * filesDir/toolchain/libs/<jars>
  * ```
  *
- * Termux prefixes and `$PATH` are searched as fallbacks so a Termux install
+ * Termux prefixes and PATH are searched as fallbacks so a Termux install
  * works out of the box.
  */
 @Singleton
