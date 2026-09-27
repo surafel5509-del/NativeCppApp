@@ -218,21 +218,36 @@ object CrashLogAnalyzer {
 
         val frameRegex = Regex("""^\s*(?:at\s+)?([\w.$]+)\.([\w$<>]+)\(([\w.$]*?)(?::(\d+))?\)""")
         val causedBy = Regex("""^(?:Caused by|Suppressed):\s*(.+)$""")
+        val exceptionHeaderRegex = Regex("""^([\w.$]+(?:Exception|Error))(?::\s*(.*))?$""")
+
+        fun clean(raw: String): String {
+            // Strip logcat prefix like "09-27 10:00:00.000 1234 1234 E AndroidRuntime: ..."
+            val androidRuntimeIdx = raw.indexOf("AndroidRuntime:")
+            return if (androidRuntimeIdx >= 0) {
+                raw.substring(androidRuntimeIdx + "AndroidRuntime:".length).trim()
+            } else {
+                raw.trim()
+            }
+        }
 
         var inTrace = false
         for (i in start until lines.size) {
-            val line = lines[i]
-            if (line.contains("FATAL EXCEPTION")) {
+            val rawLine = lines[i]
+            val line = clean(rawLine)
+            if (rawLine.contains("FATAL EXCEPTION")) {
                 inTrace = true
                 continue
             }
-            if (line.startsWith("Process:") || line.contains("Process: ")) {
-                process = line.substringAfter("Process:").trim().take(80)
+            if (line.startsWith("Process:") || rawLine.contains("Process: ")) {
+                process = clean(rawLine).substringAfter("Process:").trim().take(80)
+                if (process.isBlank()) {
+                    process = rawLine.substringAfter("Process:").trim().take(80)
+                }
                 continue
             }
-            if (line.startsWith("pid:") || line.contains("Build fingerprint")) continue
+            if (line.startsWith("pid:") || rawLine.contains("Build fingerprint")) continue
 
-            val causeMatch = causedBy.find(line.trim())
+            val causeMatch = causedBy.find(line)
             if (causeMatch != null) {
                 causes += causeMatch.groupValues[1].trim()
                 if (exceptionType == "UnknownException") {
@@ -245,11 +260,10 @@ object CrashLogAnalyzer {
 
             if (inTrace) {
                 // Exception header line: "java.lang.NullPointerException: msg"
-                if (Regex("""^[a-zA-Z][\w.]*Exception(:.*)?$""").matches(line.trim()) ||
-                    Regex("""^[a-zA-Z][\w.]*Error(:.*)?$""").matches(line.trim())
-                ) {
-                    exceptionType = line.trim().substringBefore(':').trim()
-                    message = line.trim().substringAfter(':', "").trim()
+                val headerMatch = exceptionHeaderRegex.find(line)
+                if (headerMatch != null) {
+                    exceptionType = headerMatch.groupValues[1].trim()
+                    message = headerMatch.groupValues[2].trim()
                     continue
                 }
                 val m = frameRegex.find(line)
