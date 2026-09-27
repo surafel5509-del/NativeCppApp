@@ -218,10 +218,13 @@ object CrashLogAnalyzer {
 
         val frameRegex = Regex("""^\s*(?:at\s+)?([\w.$]+)\.([\w$<>]+)\(([\w.$]*?)(?::(\d+))?\)""")
         val causedBy = Regex("""^(?:Caused by|Suppressed):\s*(.+)$""")
+        // Strip "MM-DD HH:MM:SS.mmm PID TID L Tag: " logcat prefixes so the
+        // ^-anchored matchers above see the actual message.
+        val logcatPrefix = Regex("""^\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\.\d+\s+\d+\s+\d+\s+[VDIWEF]\s+[^:]+:\s?""")
 
         var inTrace = false
         for (i in start until lines.size) {
-            val line = lines[i]
+            val line = logcatPrefix.replaceFirst(lines[i], "")
             if (line.contains("FATAL EXCEPTION")) {
                 inTrace = true
                 continue
