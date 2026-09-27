@@ -65,20 +65,18 @@ class ToolchainManager @Inject constructor(
 
         val report: String get() = buildString {
             appendLine("=== AndroidForge Studio Professional Toolchain ===")
-            appendLine("Core tools: ${if (complete) "OK ✓" else "Missing: ${missing.joinToString()}"}")
+            appendLine("Core tools: ${if (complete) "OK" else "Missing: ${missing.joinToString()}"}")
             appendLine("  aapt2: ${aapt2?.absolutePath ?: "NOT FOUND"}")
             appendLine("  d8: ${d8?.absolutePath ?: "NOT FOUND"}")
             appendLine("  apksigner: ${apksigner?.absolutePath ?: "NOT FOUND"}")
             appendLine("  zipalign: ${zipalign?.absolutePath ?: "NOT FOUND"}")
             appendLine("  kotlinc: ${kotlinc?.absolutePath ?: "NOT FOUND (use Gradle)"}")
             appendLine("  java: ${java?.absolutePath ?: "NOT FOUND"}")
-            appendLine("NDK tools: ${if (ndkComplete) "OK ✓ Professional" else "Missing: ${ndkMissing.joinToString()} (optional)"}")
+            appendLine("NDK tools: ${if (ndkComplete) "OK Professional" else "Missing: ${ndkMissing.joinToString()} (optional)"}")
             appendLine("  ndk-build: ${ndkBuild?.absolutePath ?: "NOT FOUND"}")
             appendLine("  cmake: ${cmake?.absolutePath ?: "NOT FOUND"}")
             appendLine("  clang: ${clang?.absolutePath ?: "NOT FOUND"}")
-            appendLine("LibGDX: ${if (libGdxAvailable) "OK ✓ Professional" else "Via Gradle"}")
-            appendLine("Platform: ${platformDir.absolutePath}")
-            appendLine("Artifacts: ${artifactsDir.absolutePath}")
+            appendLine("LibGDX: ${if (libGdxAvailable) "OK Professional" else "Via Gradle"}")
             appendLine("================================================")
         }
     }
