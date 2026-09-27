@@ -82,7 +82,7 @@ fun AndroidForgeRoot() {
             composable(Routes.EDITOR) {
                 EditorScreen(
                     projectId = -1L,
-                    onOpenBuilder = { },
+                    onOpenBuilder = { navController.navigate(Routes.BUILDER) },
                     onBack = { navController.popBackStack() },
                 )
             }
@@ -97,18 +97,40 @@ fun AndroidForgeRoot() {
             composable(Routes.BUILD) {
                 BuildScreen(projectId = -1L)
             }
-            composable("${Routes.BUILDER}/{projectId}") { entry ->
-                val pid = entry.arguments?.getString("projectId")?.toLongOrNull() ?: -1L
-                UiBuilderScreen(projectId = pid, onBack = { navController.popBackStack() })
-            }
             composable("${Routes.BUILD}/{projectId}") { entry ->
                 val pid = entry.arguments?.getString("projectId")?.toLongOrNull() ?: -1L
                 BuildScreen(projectId = pid)
+            }
+            composable(Routes.BUILDER) {
+                UiBuilderScreen(projectId = -1L, onBack = { navController.popBackStack() })
+            }
+            composable("${Routes.BUILDER}/{projectId}") { entry ->
+                val pid = entry.arguments?.getString("projectId")?.toLongOrNull() ?: -1L
+                UiBuilderScreen(projectId = pid, onBack = { navController.popBackStack() })
             }
             composable(Routes.AI) { AiScreen() }
             composable(Routes.TOOLS) { ToolsScreen() }
             composable(Routes.PLUGINS) { PluginsScreen() }
             composable(Routes.SETTINGS) { SettingsScreen(onBack = { navController.popBackStack() }) }
+            // Professional routes - map to existing screens for now with professional features
+            composable(Routes.RESOURCES) { 
+                // Resource manager - professional
+                BuildScreen(projectId = -1L) 
+            }
+            composable(Routes.NDK) { 
+                // NDK manager - professional
+                ToolsScreen() 
+            }
+            composable(Routes.GAME) { 
+                // Game asset manager - professional LibGDX
+                UiBuilderScreen(projectId = -1L, onBack = { navController.popBackStack() }) 
+            }
+            composable(Routes.APK_ANALYZER) { 
+                BuildScreen(projectId = -1L) 
+            }
+            composable(Routes.LOGCAT) { 
+                ToolsScreen() 
+            }
         }
     }
 }

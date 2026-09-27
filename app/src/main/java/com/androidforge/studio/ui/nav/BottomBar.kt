@@ -1,5 +1,7 @@
 package com.androidforge.studio.ui.nav
 
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -9,9 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 
 /**
- * Bottom navigation bar. Editor/Build routes are project-scoped
- * ("editor/{projectId}"), so they match by prefix; when no project is open
- * those tabs navigate to the plain route and screens show an empty state.
+ * Professional Bottom navigation bar - AndroidForge Studio
+ * Features:
+ * - Professional IDE navigation
+ * - Editor/Build routes are project-scoped
+ * - Professional indicators for NDK, LibGDX, Real APK
  */
 @Composable
 fun BottomBar(
@@ -25,9 +29,17 @@ fun BottomBar(
             NavigationBarItem(
                 selected = selected,
                 onClick = { onNavigate(dest.route) },
-                icon = { Icon(dest.icon, contentDescription = dest.label) },
+                icon = {
+                    if (dest.professional) {
+                        BadgedBox(badge = { Badge { Text("Pro", style = androidx.compose.material3.MaterialTheme.typography.labelSmall) } }) {
+                            Icon(dest.icon, contentDescription = dest.label)
+                        }
+                    } else {
+                        Icon(dest.icon, contentDescription = dest.label)
+                    }
+                },
                 label = {
-                    Text(dest.label, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(dest.label, maxLines = 1, overflow = TextOverflow.Ellipsis, style = androidx.compose.material3.MaterialTheme.typography.labelSmall)
                 },
             )
         }
