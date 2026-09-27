@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -278,8 +279,9 @@ private fun ProfessionalGitTab(state: ToolsUiState, viewModel: ToolsViewModel) {
                 if (state.gitStatus == null) {
                     Text("No Git repo - Run Init - Professional", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.outline)
                 } else {
+                    val totalChanges = state.gitStatus.staged.size + state.gitStatus.unstaged.size + state.gitStatus.untracked.size
                     Text("Branch: ${state.gitStatus.branch} - Professional", style = MaterialTheme.typography.labelSmall)
-                    Text("Changes: ${state.gitStatus.changes.size} - Professional", style = MaterialTheme.typography.labelSmall)
+                    Text("Changes: $totalChanges - Professional (staged=${state.gitStatus.staged.size}, unstaged=${state.gitStatus.unstaged.size}, untracked=${state.gitStatus.untracked.size})", style = MaterialTheme.typography.labelSmall)
                 }
             }
         }
@@ -328,12 +330,12 @@ private fun ProfessionalDiffTab(state: ToolsUiState) {
                             diff.hunks.forEach { hunk ->
                                 Text("@@ ${hunk.header} @@ - Professional", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                                 hunk.lines.take(20).forEach { line ->
-                                    val color = when {
-                                        line.startsWith("+") -> Color(0xFF238636)
-                                        line.startsWith("-") -> Color(0xFFCF222E)
-                                        else -> MaterialTheme.colorScheme.onSurface
+                                    val color = when (line.type) {
+                                        GitDiffHunk.DiffLine.Type.ADD -> Color(0xFF238636)
+                                        GitDiffHunk.DiffLine.Type.DEL -> Color(0xFFCF222E)
+                                        GitDiffHunk.DiffLine.Type.CONTEXT -> MaterialTheme.colorScheme.onSurface
                                     }
-                                    Text(line, style = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace), color = color)
+                                    Text(line.text, style = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace), color = color)
                                 }
                             }
                         }

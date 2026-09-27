@@ -223,7 +223,7 @@ fun UiBuilderScreen(
                     BuilderMode.LAYERS -> LayersPanel(state = state, onSelect = viewModel::select, onMove = viewModel::moveSelectedToParent, onDelete = viewModel::deleteSelected)
                     BuilderMode.CODE_COMPOSE -> CodePane(viewModel.composeCode(), "Compose - Professional")
                     BuilderMode.CODE_XML -> CodePane(viewModel.xmlCode(), "XML - Professional")
-                    BuilderMode.PREVIEW -> ProfessionalLivePreview(state = state)
+                    BuilderMode.PREVIEW -> ProfessionalLivePreview(root = state.root)
                 }
             }
 

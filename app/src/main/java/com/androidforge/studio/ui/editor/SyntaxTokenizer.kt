@@ -87,18 +87,20 @@ object SyntaxTokenizer {
 
         val keywords = when (language) {
             CodeLanguage.KOTLIN, CodeLanguage.GRADLE_KTS -> KOTLIN_KEYWORDS
-            CodeLanguage.JAVA -> JAVA_KEYWORDS
-            CodeLanguage.GROOVY -> GRADLE_KEYWORDS
+            CodeLanguage.JAVA, CodeLanguage.CPP, CodeLanguage.C -> JAVA_KEYWORDS
+            CodeLanguage.GROOVY, CodeLanguage.CMAKE -> GRADLE_KEYWORDS
             CodeLanguage.JAVASCRIPT -> JS_KEYWORDS
             CodeLanguage.XML, CodeLanguage.HTML -> emptySet()
-            CodeLanguage.JSON, CodeLanguage.CSS, CodeLanguage.TEXT -> emptySet()
+            CodeLanguage.JSON, CodeLanguage.CSS, CodeLanguage.TEXT,
+            CodeLanguage.YAML, CodeLanguage.PROPERTIES, CodeLanguage.GLSL, CodeLanguage.SHADER -> emptySet()
         }
         val lineComment = when (language) {
             CodeLanguage.KOTLIN, CodeLanguage.JAVA, CodeLanguage.GRADLE_KTS,
             CodeLanguage.GROOVY, CodeLanguage.JAVASCRIPT, CodeLanguage.CSS,
+            CodeLanguage.CPP, CodeLanguage.C, CodeLanguage.CMAKE, CodeLanguage.GLSL, CodeLanguage.SHADER
             -> "//"
             CodeLanguage.XML, CodeLanguage.HTML -> "<!--"
-            CodeLanguage.JSON, CodeLanguage.TEXT -> "\u0000" // none
+            CodeLanguage.JSON, CodeLanguage.TEXT, CodeLanguage.YAML, CodeLanguage.PROPERTIES -> "\u0000" // none
         }
 
         // XML / HTML: tag-aware scan
