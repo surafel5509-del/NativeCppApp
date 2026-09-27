@@ -10,6 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
       - name: Checkout
@@ -27,11 +30,76 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      # Failing fast here isolates wrapper/JVM problems from compile problems.
+      # Results are mirrored into annotations (readable via the Checks API).
+      - name: Gradle sanity
+        run: |
+          set +e
+          ./gradlew --version > "$RUNNER_TEMP/sanity.log" 2>&1
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            tail -40 "$RUNNER_TEMP/sanity.log" | cut -c1-400 | while IFS= read -r line; do
+              echo "::error::[gradle sanity] $line"
+            done
+          else
+            echo "::notice::gradle sanity OK: $(grep -E 'Gradle [0-9]' "$RUNNER_TEMP/sanity.log" | head -1)"
+          fi
+          exit $status
+
       - name: Unit tests
-        run: ./gradlew test --stacktrace
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          set -o pipefail
+          ./gradlew test --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-test.log"
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            { grep -E -A10 "^e: " "$RUNNER_TEMP/gradle-test.log"; \
+              grep -E -A6 "(What went wrong|> Task .*FAILED|FAILURE:|expected:|actual:|Exception)" "$RUNNER_TEMP/gradle-test.log"; } \
+              | head -120 | cut -c1-400 | awk '!seen[$0]++' > "$RUNNER_TEMP/digest.txt"
+            if [ ! -s "$RUNNER_TEMP/digest.txt" ]; then
+              tail -50 "$RUNNER_TEMP/gradle-test.log" | cut -c1-400 > "$RUNNER_TEMP/digest.txt"
+            fi
+            while IFS= read -r line; do
+              echo "::error::[test] $line"
+            done < "$RUNNER_TEMP/digest.txt"
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+              {
+                echo "### CI failure log (test step), run ${GITHUB_RUN_ID}"
+                echo
+                echo "First 80 lines:"
+                echo '```'
+                head -80 "$RUNNER_TEMP/gradle-test.log" | cut -c1-300
+                echo '```'
+                echo
+                echo "Error region (stack frames stripped):"
+                echo '```'
+                grep -v -E "^[[:space:]]+(at |\.\.\.)" "$RUNNER_TEMP/gradle-test.log" | cut -c1-300 | head -400
+                echo '```'
+              } > "$RUNNER_TEMP/ci-comment.md"
+              gh pr comment "${{ github.event.number }}" --body-file "$RUNNER_TEMP/ci-comment.md"                 || echo "::warning::could not post PR comment"
+            fi
+          fi
+          exit $status
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: |
+          set +e
+          set -o pipefail
+          ./gradlew assembleDebug --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-assemble.log"
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            grep -E "(^e: |error: |What went wrong|> Task .*FAILED|FAILURE:|Exception|Caused by)" "$RUNNER_TEMP/gradle-assemble.log" \
+              | head -60 | cut -c1-400 > "$RUNNER_TEMP/digest2.txt"
+            if [ ! -s "$RUNNER_TEMP/digest2.txt" ]; then
+              tail -50 "$RUNNER_TEMP/gradle-assemble.log" | cut -c1-400 > "$RUNNER_TEMP/digest2.txt"
+            fi
+            while IFS= read -r line; do
+              echo "::error::[assemble] $line"
+            done < "$RUNNER_TEMP/digest2.txt"
+          fi
+          exit $status
 
       - name: Upload test reports
         if: always()
@@ -40,6 +108,7 @@ jobs:
           name: test-reports
           path: app/build/reports/tests/
           retention-days: 7
+          if-no-files-found: ignore
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

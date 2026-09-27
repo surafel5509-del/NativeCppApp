@@ -513,7 +513,7 @@ private fun CodePane(code: String) {
                 color = MaterialTheme.colorScheme.outline,
             )
         }
-        androidx.compose.foundation.text.SelectionContainer {
+        androidx.compose.foundation.text.selection.SelectionContainer {
             Text(
                 text = code,
                 modifier = Modifier

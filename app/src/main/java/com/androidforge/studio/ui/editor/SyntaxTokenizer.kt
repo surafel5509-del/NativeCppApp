@@ -265,6 +265,7 @@ object SyntaxTokenizer {
         TokenType.ATTR -> style.attr
         TokenType.FUNC -> style.func
         TokenType.TYPE -> style.type
+        TokenType.PUNCT -> Color.Unspecified
         TokenType.TEXT -> Color.Unspecified
     }
 }

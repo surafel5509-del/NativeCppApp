@@ -104,7 +104,7 @@ app/
 |---|---|
 | JDK | 17 |
 | Gradle | 8.11.1 (wrapper included) |
-| AGP | 8.7.3 · Kotlin 2.1.0 · KSP 2.1.0-1.0.29 · Hilt 2.51.1 |
+| AGP | 8.7.3 · Kotlin 2.1.0 · KSP 2.1.0-1.0.29 · Hilt 2.54 |
 | SDK | compileSdk/targetSdk **35**, minSdk **26** |
 
 ```bash

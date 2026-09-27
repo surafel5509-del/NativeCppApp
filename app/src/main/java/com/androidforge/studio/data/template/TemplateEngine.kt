@@ -347,7 +347,7 @@ object TemplateEngine {
                 "implementation(\"com.google.firebase:firebase-auth-ktx\")",
                 "implementation(\"com.google.firebase:firebase-firestore-ktx\")",
             ),
-        ).second
+        )
         base["app/google-services.json.example"] = """
             {
               "project_info": {
@@ -376,7 +376,7 @@ object TemplateEngine {
              * google-services plugin to app/build.gradle.kts to enable real calls.
              */
             class UserRepository {
-                suspend fun greet(name: String): String = "Welcome, $name!"
+                suspend fun greet(name: String): String = "Welcome, ${'$'}name!"
             }
         """.trimIndent() + "\n"
         return base

@@ -41,7 +41,7 @@ class JGitRepository @Inject constructor(
                     clean = st.isClean,
                     staged = (st.added + st.changed + st.removed).distinct(),
                     unstaged = (st.modified + st.missing).distinct(),
-                    untracked = st.untracked,
+                    untracked = st.untracked.toList(),
                 )
             }
         } catch (e: Exception) {
@@ -79,7 +79,7 @@ class JGitRepository @Inject constructor(
                     val formatter = DiffFormatter(ByteArrayOutputStream())
                     formatter.setRepository(git.repository)
                     val entries: List<DiffEntry> = if (filePath != null) {
-                        formatter.setPathFilter(org.eclipse.jgit.pathfilter.PathFilter.create(filePath))
+                        formatter.setPathFilter(org.eclipse.jgit.treewalk.filter.PathFilter.create(filePath))
                         git.diff().call()
                     } else {
                         git.diff().call()

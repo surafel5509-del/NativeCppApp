@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.androidforge.studio.domain.model.AiProvider
+import com.androidforge.studio.domain.model.ChatMessage
 import com.androidforge.studio.domain.model.ChatRole
 
 /**
