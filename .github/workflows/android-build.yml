@@ -50,8 +50,9 @@ jobs:
           ./gradlew test --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle-test.log"
           status=$?
           if [ "$status" -ne 0 ]; then
-            grep -E "(^e: |^w: file|error: |What went wrong|> Task .*FAILED|FAILURE:|FAILED|expected:|actual:|Exception|Caused by)" "$RUNNER_TEMP/gradle-test.log" \
-              | head -60 | cut -c1-400 > "$RUNNER_TEMP/digest.txt"
+            { grep -E -A10 "^e: " "$RUNNER_TEMP/gradle-test.log"; \
+              grep -E -A6 "(What went wrong|> Task .*FAILED|FAILURE:|expected:|actual:|Exception)" "$RUNNER_TEMP/gradle-test.log"; } \
+              | head -120 | cut -c1-400 | awk '!seen[$0]++' > "$RUNNER_TEMP/digest.txt"
             if [ ! -s "$RUNNER_TEMP/digest.txt" ]; then
               tail -50 "$RUNNER_TEMP/gradle-test.log" | cut -c1-400 > "$RUNNER_TEMP/digest.txt"
             fi
